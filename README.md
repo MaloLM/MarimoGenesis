@@ -1,111 +1,94 @@
-# JupyterGenesis
+# MarimoGenesis
 
-Your quickest route to launching a fully-prepared Jupyter environment for Python development. Optimized for simplicity and ease of use, **JupyterGenesis** provides dedicated scripts to set up your Python development environment with Jupyter Lab, tailored for macOS and Windows.
+This repository allows you to quickly launch a ready-to-use local Python environment via script (double-click supported), powered by **marimo**.
 
 ![software launching demo gif](./docs/launching_demo.gif)
 
-## Supported Operating Systems
+## Supported Systems
 
-- **macOS** (Bash)
-- **Windows** (PowerShell script)
+- **macOS** (Bash scripts)
+- **Windows** (PowerShell scripts)
+- **Ubuntu/Linux** (Bash scripts)
 
 ## Prerequisites
 
-Before you begin, ensure you have Python 3.6 or later installed on your system. Python needs to be added to your system's PATH to ensure the scripts can invoke the Python interpreter.
+- Python 3.10+ recommended, present in your `PATH`
+- Internet connection for the first run (dependency installation)
 
-- For **Windows**, Python can be installed from the [official website](https://www.python.org) or via package managers like [Chocolatey](https://chocolatey.org).
-- **macOS** users can install Python using their respective package managers (such as [Homebrew](https://brew.sh) for macOS), or by downloading it from the [Python website](https://www.python.org) .
+## Available Scripts
 
-## Installation
+In the `scripts/` folder:
 
-1. **Clone the Repository**
+- `_start-marimo-macos.sh`
+- `_start-marimo-windows.ps1`
+- `_start-marimo-ubuntu.sh`
 
-   First, clone the **JupyterGenesis** repository to your local machine using Git:
+## Dependencies
 
-   ```sh
-   git clone https://github.com/MaloLM/JupyterGenesis
-   cd JupyterGenesis
-   ```
+The repository uses a **single `requirements.txt`** (locked versions):
 
-2. **Prepare the Script**
+```txt
+numpy==1.26.4
+polars==1.6.0
+marimo[sql]==0.9.17
+tensorflow==2.16.2
+```
 
-   - **macOS**: Make the script executable. For macOS users, navigate to the cloned directory and run:
+Each script:
 
-     ```sh
-     chmod +x _start-jupyter-macos.sh
-     ```
+1. creates the venv if missing,
+2. updates pip,
+3. installs/upgrades dependencies via `pip install -r requirements.txt`,
+4. launches marimo.
 
-   - **Windows**: Ensure that your system's execution policy allows running scripts. Open PowerShell as Administrator and run:
+## Virtual Environment (Isolation)
 
-     ```powershell
-     Set-ExecutionPolicy RemoteSigned
-     ```
+- marimo: `scripts/python-dev-env-marimo`
 
-     Note: You can revert this change after running the setup script with `Set-ExecutionPolicy Restricted`.
+This keeps your system clean and ensures a simple UX (one script = one environment = one use case).
 
-3. **Run the Script**
+## Security & Local UX
 
-   Execute the dedicated script for your OS.
+To respect the "double-click, browser opens automatically" usage:
 
-   - **macOS**:
+- local binding to `127.0.0.1`
+- automatic browser opening
+- **no token/password** for local loopback
+- **System theme** configured by default for marimo
 
-     ```sh
-     ./_start-jupyter-macos.sh
-     ```
+> Important: this mode is intended for local use only (personal machine, not exposed).
 
-     Or simply double click the script.
+## Execution
 
-   - **Windows**:
+### macOS
 
-     ```powershell
-     .\_start-jupyter-windows.ps1
-     ```
+```bash
+chmod +x scripts/*.sh
+./scripts/_start-marimo-macos.sh
+```
 
-     Or simply double click the script.
+### Windows (PowerShell)
 
-> **Caution:**
+```powershell
+.\scripts\_start-marimo-windows.ps1
+```
 
-- Ensure that requirements.txt file is at the same directory than the script.
-- Ensure that requirements.txt file contains at least the `jupyterlab` package, else it could not work properly.
+### Ubuntu/Linux
 
-## Usage
+```bash
+chmod +x scripts/*.sh
+./scripts/_start-marimo-ubuntu.sh
+```
 
-The setup scripts prepare a Python virtual environment, install all required packages (in requirements.txt), including Jupyter Lab and finally start the jupyterlab server. If you wish to use the virtual environment without starting the Jupyter server, you can activate the environment manually (after one script execution):
+## marimo Notes
 
-- **macOS**:
+On the first run, if `marimo_notebook.py` does not exist in `scripts/notebooks/`, a minimal notebook is automatically generated.
 
-  Open a terminal and navigate to the project directory. Activate the virtual environment by running:
+## Customizing Icons
 
-  ```sh
-  source python-dev-env/bin/activate
-  ```
-
-- **Windows**:
-
-  Open PowerShell and navigate to the project directory. Activate the virtual environment by running:
-
-  ```powershell
-  .\python-dev-env\Scripts\Activate.ps1
-  ```
-
-To deactivate the virtual environment and return to your system's global Python environment, you can simply run the command `deactivate` in your terminal (macOS) or PowerShell (Windows).
-
-## Customizing Script Icons
-
-For those who wish to personalize the script icons to either a Python or Jupyter logo, detailed instructions are available to guide you through the process on macOS and Windows.
-
-Please refer to the [Custom Icon Guide](/docs/CUSTOM_ICON.md) for step-by-step instructions on how to customize your script icons using the assets provided in the `/icons` directory of this repository.
-
-## Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+The customization guide is available here:
+[Custom Icon Guide](/docs/CUSTOM_ICON.md)
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+MIT. See [LICENSE](./LICENSE).

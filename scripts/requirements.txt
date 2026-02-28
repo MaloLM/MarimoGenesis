@@ -1,4 +1,4 @@
-numpy
-pandas
-jupyterlab
-tensorflow
+numpy==1.26.4
+polars==1.6.0
+marimo[sql]==0.9.17
+tensorflow==2.16.2
