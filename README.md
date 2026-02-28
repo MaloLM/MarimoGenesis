@@ -7,8 +7,8 @@ This repository allows you to quickly launch a ready-to-use local Python environ
 ## Supported Systems
 
 - **macOS** (Bash scripts)
-- **Windows** (PowerShell scripts)
 - **Ubuntu/Linux** (Bash scripts)
+- **Windows** (PowerShell scripts)
 
 ## Prerequisites
 
@@ -31,7 +31,6 @@ The repository uses a **single `requirements.txt`** (locked versions):
 numpy==1.26.4
 polars==1.6.0
 marimo[sql]==0.9.17
-tensorflow==2.16.2
 ```
 
 Each script:
