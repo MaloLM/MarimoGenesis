@@ -11,7 +11,7 @@ function Fail($message) {
 
 function Configure-MarimoTheme {
     $configFile = Join-Path -Path $HOME -ChildPath ".marimo.toml"
-    Log "Configuration du thème marimo sur 'system' dans $configFile"
+    Log "Configuring marimo theme to 'system' in $configFile"
     
     if (-not (Test-Path -Path $configFile)) {
         @'
@@ -24,7 +24,7 @@ theme = "system"
             $content += "`r`n[display]`r`ntheme = `"system`""
             $content | Set-Content -Path $configFile -Encoding UTF8
         } elseif ($content -notmatch "theme\s*=\s*`"system`"") {
-            # Si [display] existe mais pas theme=system, on l'ajoute après [display]
+            # If [display] exists but theme=system is missing, add it after [display]
             $content = $content -replace "\[display\]", "[display]`r`ntheme = `"system`""
             $content | Set-Content -Path $configFile -Encoding UTF8
         }
@@ -39,35 +39,35 @@ $notebookDir = Join-Path -Path $scriptPath -ChildPath "notebooks"
 $marimoNotebook = Join-Path -Path $notebookDir -ChildPath "marimo_notebook.py"
 
 if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-    Fail "python introuvable dans le PATH."
+    Fail "python not found in PATH."
 }
 
 if (-not (Test-Path -Path $reqFile)) {
-    Fail "requirements.txt introuvable: $reqFile"
+    Fail "requirements.txt not found: $reqFile"
 }
 
 Configure-MarimoTheme
 
 if (-not (Test-Path -Path $notebookDir)) {
-    Log "Création du dossier notebooks: $notebookDir"
+    Log "Creating notebooks directory: $notebookDir"
     New-Item -ItemType Directory -Path $notebookDir
 }
 
 $venvPython = Join-Path -Path $venvDir -ChildPath "Scripts\python.exe"
 
 if (Test-Path -Path $venvPython) {
-    Log "Environnement virtuel existant détecté: $venvDir"
+    Log "Existing virtual environment detected: $venvDir"
 } else {
-    Log "Création de l'environnement virtuel: $venvDir"
+    Log "Creating virtual environment: $venvDir"
     python -m venv $venvDir
 }
 
-Log "Mise à jour de pip et installation des dépendances (fichier locké)."
+Log "Updating pip and installing dependencies (locked file)."
 & $venvPython -m pip install --upgrade pip
 & $venvPython -m pip install --upgrade -r $reqFile
 
 if (-not (Test-Path -Path $marimoNotebook)) {
-    Log "Création d'un notebook marimo minimal: $marimoNotebook"
+    Log "Creating a minimal marimo notebook: $marimoNotebook"
     @'
 import marimo
 
@@ -77,7 +77,6 @@ app = marimo.App(width="medium")
 
 @app.cell
 def __():
-    import numpy as np
     import polars as pl
     return np, pl
 
@@ -99,9 +98,9 @@ if __name__ == "__main__":
 '@ | Set-Content -Path $marimoNotebook -Encoding UTF8
 }
 
-Log "Lancement de marimo (local-only)."
-Log "URL attendue: http://127.0.0.1:2718"
-Log "Arrêt: Ctrl+C dans cette fenêtre PowerShell."
-Log "Venv utilisé: $venvDir"
+Log "Launching marimo (local-only)."
+Log "Expected URL: http://127.0.0.1:2718"
+Log "Stop: Ctrl+C in this PowerShell window."
+Log "Using venv: $venvDir"
 
 & $venvPython -m marimo edit $marimoNotebook --host 127.0.0.1 --port 2718

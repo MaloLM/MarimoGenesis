@@ -28,7 +28,6 @@ In the `scripts/` folder:
 The repository uses a **single `requirements.txt`** (locked versions):
 
 ```txt
-numpy==1.26.4
 polars==1.6.0
 marimo[sql]==0.9.17
 ```

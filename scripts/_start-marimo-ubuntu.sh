@@ -20,7 +20,7 @@ fail() {
 
 configure_marimo_theme() {
   local config_file="${HOME}/.marimo.toml"
-  log "Configuration du thème marimo sur 'system' dans ${config_file}"
+  log "Configuring marimo theme to 'system' in ${config_file}"
   
   if [ ! -f "${config_file}" ]; then
     echo '[display]' > "${config_file}"
@@ -29,27 +29,27 @@ configure_marimo_theme() {
     if ! grep -q "\[display\]" "${config_file}"; then
       echo -e "\n[display]\ntheme = \"system\"" >> "${config_file}"
     elif ! grep -q "theme = \"system\"" "${config_file}"; then
-      # Utilisation de sed pour insérer après [display]
+      # Use sed to insert after [display]
       sed -i '/\[display\]/a theme = "system"' "${config_file}"
     fi
   fi
 }
 
-command -v python3 >/dev/null 2>&1 || fail "python3 introuvable dans le PATH."
-[ -f "${REQ_FILE}" ] || fail "requirements.txt introuvable: ${REQ_FILE}"
+command -v python3 >/dev/null 2>&1 || fail "python3 not found in PATH."
+[ -f "${REQ_FILE}" ] || fail "requirements.txt not found: ${REQ_FILE}"
 
 configure_marimo_theme
 
 if [ ! -d "${NOTEBOOK_DIR}" ]; then
-  log "Création du dossier notebooks: ${NOTEBOOK_DIR}"
+  log "Creating notebooks directory: ${NOTEBOOK_DIR}"
   mkdir -p "${NOTEBOOK_DIR}"
 fi
 
 if [ -d "${VENV_DIR}/bin" ]; then
-  log "Environnement virtuel existant détecté: ${VENV_DIR}"
+  log "Existing virtual environment detected: ${VENV_DIR}"
 else
-  log "Création de l'environnement virtuel: ${VENV_DIR}"
-  python3 -m venv "${VENV_DIR}" || fail "Impossible de créer le virtualenv."
+  log "Creating virtual environment: ${VENV_DIR}"
+  python3 -m venv "${VENV_DIR}" || fail "Unable to create virtual environment."
 fi
 
 # shellcheck disable=SC1091
@@ -57,14 +57,14 @@ source "${VENV_DIR}/bin/activate"
 
 CURRENT_PYTHON="$(command -v python)"
 EXPECTED_PYTHON="${VENV_DIR}/bin/python"
-[ "${CURRENT_PYTHON}" = "${EXPECTED_PYTHON}" ] || fail "Python actif inattendu: ${CURRENT_PYTHON} (attendu: ${EXPECTED_PYTHON})"
+[ "${CURRENT_PYTHON}" = "${EXPECTED_PYTHON}" ] || fail "Unexpected active Python: ${CURRENT_PYTHON} (expected: ${EXPECTED_PYTHON})"
 
-log "Mise à jour de pip et installation des dépendances (fichier locké)."
+log "Updating pip and installing dependencies (locked file)."
 python -m pip install --upgrade pip
 python -m pip install --upgrade -r "${REQ_FILE}"
 
 if [ ! -f "${MARIMO_NOTEBOOK}" ]; then
-  log "Création d'un notebook marimo minimal: ${MARIMO_NOTEBOOK}"
+  log "Creating a minimal marimo notebook: ${MARIMO_NOTEBOOK}"
   cat > "${MARIMO_NOTEBOOK}" <<'PYEOF'
 import marimo
 
@@ -74,7 +74,6 @@ app = marimo.App(width="medium")
 
 @app.cell
 def __():
-    import numpy as np
     import polars as pl
     return np, pl
 
@@ -96,9 +95,9 @@ if __name__ == "__main__":
 PYEOF
 fi
 
-log "Lancement de marimo (local-only)."
-log "URL attendue: http://127.0.0.1:2718"
-log "Arrêt: Ctrl+C dans la fenêtre Terminal ouverte par le script."
-log "Venv utilisé: ${VENV_DIR}"
+log "Launching marimo (local-only)."
+log "Expected URL: http://127.0.0.1:2718"
+log "Stop: Ctrl+C in the Terminal window opened by the script."
+log "Using venv: ${VENV_DIR}"
 
 exec python -m marimo edit "${MARIMO_NOTEBOOK}" --host 127.0.0.1 --port 2718
