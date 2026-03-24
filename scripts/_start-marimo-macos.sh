@@ -90,4 +90,5 @@ log "Expected URL: http://127.0.0.1:2718"
 log "Stop: Ctrl+C in the Terminal window opened by the script."
 log "Using venv: ${VENV_DIR}"
 
+cd "${PROJECT_DIR}"
 exec python -m marimo edit "${MARIMO_NOTEBOOK}" --host 127.0.0.1 --port 2718
