@@ -77,19 +77,7 @@ app = marimo.App(width="medium")
 @app.cell
 def __():
     import polars as pl
-    return np, pl
-
-
-@app.cell
-def __(np, pl):
-    df = pl.DataFrame({"x": np.arange(5), "y": np.arange(5) ** 2})
-    return (df,)
-
-
-@app.cell
-def __(df):
-    df
-    return
+    return pl
 
 
 if __name__ == "__main__":
